@@ -1,0 +1,2 @@
+curl -X GET "http://localhost:9080/me" \
+     -H "Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MTFAZ21haWwuY29tIiwidXNlcklkIjo0MSwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc2Mzc1MzkxMSwiZXhwIjoxNzYzNzU3NTExfQ.1Ygr9bvS_qualMk4UrHBCrkoWcqvb89HdMnIJyiXJi3h7gYuiYvXoj-NLpduirEpQVZ40LH1NzFwLdlW8KeZOQ"
