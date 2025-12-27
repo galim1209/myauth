@@ -48,7 +48,19 @@ out/
 *.keystore
 keystore.p12
 
+# SSH 키 및 PEM 파일 (AWS Lightsail, EC2 등)
+*.pem
+*.key
+*.ppk
+
 # 환경 변수 파일 (민감 정보 포함)
 .env
 .env.local
 .env.*.local
+secret.env
+
+# 자격증명 파일
+credentials.*
+*credentials*
+*.crt
+*.cer
