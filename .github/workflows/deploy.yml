@@ -230,6 +230,28 @@ jobs:
           # 서버에서 실행할 배포 스크립트
           # - | 기호: 여러 줄 명령어를 순서대로 실행
           script: |
+            # ===== 0. Docker Compose 설치 확인 및 자동 설치 =====
+            # Docker Compose가 설치되어 있지 않으면 자동으로 설치
+            if ! sudo docker compose version &> /dev/null; then
+              echo "Docker Compose 플러그인이 설치되어 있지 않습니다. 자동으로 설치합니다..."
+
+              # Docker Compose V2 플러그인 디렉토리 생성
+              sudo mkdir -p /usr/local/lib/docker/cli-plugins
+
+              # Docker Compose V2 플러그인 다운로드 (최신 버전)
+              sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
+                -o /usr/local/lib/docker/cli-plugins/docker-compose
+
+              # 실행 권한 부여
+              sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+
+              echo "Docker Compose 플러그인 설치 완료!"
+              sudo docker compose version
+            else
+              echo "Docker Compose 플러그인이 이미 설치되어 있습니다."
+              sudo docker compose version
+            fi
+
             # ===== 1. 프로젝트 디렉토리 생성 및 이동 =====
             # ~/myauth: 서버의 홈 디렉토리 아래 myauth 폴더
             mkdir -p ~/myauth
