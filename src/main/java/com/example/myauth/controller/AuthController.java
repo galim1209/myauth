@@ -58,7 +58,7 @@ public class AuthController {
    * 성공 시 200 OK와 함께 토큰 정보 반환
    * 실패 시 예외 발생 (GlobalExceptionHandler에서 처리)
    */
-  @PostMapping("/login")
+  @PostMapping("/old_login")
   public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
     log.info("로그인 요청: {}", loginRequest.getEmail());
 
@@ -80,7 +80,7 @@ public class AuthController {
    * 성공 시 200 OK와 함께 토큰 정보 반환
    * 실패 시 예외 발생 (GlobalExceptionHandler에서 처리)
    */
-  @PostMapping("/loginEx")
+  @PostMapping("/login")
   public ResponseEntity<ApiResponse<LoginResponse>> loginEx(
       @Valid @RequestBody LoginRequest loginRequest,
       HttpServletRequest request,
