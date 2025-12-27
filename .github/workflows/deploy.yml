@@ -39,9 +39,10 @@ env:
 
   # Docker 이미지 이름
   # - ${{ github.repository }}는 GitHub이 자동으로 제공하는 값
-  # - 형식: "사용자명/저장소명" (예: eunbumkim/myauth)
-  # - 최종 이미지 경로: ghcr.io/eunbumkim/myauth:latest
-  IMAGE_NAME: ${{ github.repository }}
+  # - 형식: "사용자명/저장소명" (예: icesnake72/myauth)
+  # - GHCR은 소문자만 허용하므로 소문자로 변환
+  # - 최종 이미지 경로: ghcr.io/icesnake72/myauth:latest
+  IMAGE_NAME: icesnake72/myauth
 
 # ====================================================================================================
 # 작업(Job) 정의: 실제로 실행할 작업들의 목록
@@ -328,17 +329,19 @@ jobs:
             echo "${{ secrets.GITHUB_TOKEN }}" | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
             # ===== 5. 최신 Docker 이미지 다운로드 =====
-            # docker-compose pull: 레지스트리에서 최신 이미지를 다운로드
+            # docker compose pull: 레지스트리에서 최신 이미지를 다운로드
+            # - Docker Compose V2 플러그인 사용 (docker compose, 하이픈 없음)
             # - -f docker-compose.prod.yml: 프로덕션 설정 파일 지정
             # - backend: backend 서비스의 이미지만 다운로드
             #
             # 다운로드되는 이미지:
             # - ghcr.io/icesnake72/myauth:latest (이전 단계에서 푸시한 이미지)
             # - sudo: Docker daemon 접근을 위해 관리자 권한 필요
-            sudo docker-compose -f docker-compose.prod.yml pull backend
+            sudo docker compose -f docker-compose.prod.yml pull backend
 
             # ===== 6. 컨테이너 시작/재시작 (무중단 배포) =====
-            # docker-compose up: 컨테이너 생성 및 시작
+            # docker compose up: 컨테이너 생성 및 시작
+            # - Docker Compose V2 플러그인 사용 (docker compose, 하이픈 없음)
             # - -d: 백그라운드 실행 (detached mode)
             # - backend: backend 서비스만 재시작
             #
@@ -347,7 +350,7 @@ jobs:
             # 2. 실행 중이 아니면: 새로 시작
             # 3. Lightsail Database는 별도 관리되므로 영향 없음
             # - sudo: Docker daemon 접근을 위해 관리자 권한 필요
-            sudo docker-compose -f docker-compose.prod.yml up -d backend
+            sudo docker compose -f docker-compose.prod.yml up -d backend
 
             # ===== 7. 사용하지 않는 이미지 정리 =====
             # docker image prune: 불필요한 이미지 삭제로 디스크 공간 확보
@@ -361,12 +364,13 @@ jobs:
             sudo docker image prune -af
 
             # ===== 8. 배포 결과 확인 =====
-            # docker-compose ps: 실행 중인 컨테이너 상태 확인
+            # docker compose ps: 실행 중인 컨테이너 상태 확인
+            # - Docker Compose V2 플러그인 사용 (docker compose, 하이픈 없음)
             # - 컨테이너가 정상적으로 실행 중인지 확인
             # - 포트 바인딩, 상태(Up/Exited) 등 표시
             # - 이 출력은 GitHub Actions 로그에 기록됨
             # - sudo: Docker daemon 접근을 위해 관리자 권한 필요
-            sudo docker-compose -f docker-compose.prod.yml ps
+            sudo docker compose -f docker-compose.prod.yml ps
 
       # ========================================
       # 9. Slack 알림 (선택사항)
