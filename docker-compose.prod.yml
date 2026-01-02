@@ -201,6 +201,12 @@ services:
       # - 예: http://server-ip-address:8080/auth/kakao/callback
       KAKAO_REDIRECT_URI: ${KAKAO_REDIRECT_URI}
 
+      # ===== 프론트엔드 URL 설정 =====
+      # CORS 허용 출처 및 OAuth 리다이렉트에 사용
+      # - 개발: http://localhost
+      # - 프로덕션: http://server-ip-address
+      FRONTEND_URL: ${FRONTEND_URL}
+
       # ===== Spring 프로파일 설정 =====
       # 어떤 환경 설정을 사용할지 지정
       # - prod: 프로덕션 환경 (application-prod.yaml 사용)
