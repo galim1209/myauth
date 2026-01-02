@@ -198,6 +198,19 @@ jobs:
           cache-to: type=gha,mode=max
 
       # ================================================================================================
+      # 7.5단계: docker-compose.prod.yml 파일 전송
+      # ================================================================================================
+      - name: docker-compose.prod.yml 전송
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          port: 22
+          source: "docker-compose.prod.yml"
+          target: "/home/${{ secrets.LIGHTSAIL_USER }}/myauth/"
+
+      # ================================================================================================
       # 8단계: Lightsail 서버에 SSH 접속하여 배포
       # ================================================================================================
       - name: Lightsail 서버 배포
@@ -253,15 +266,15 @@ jobs:
               sudo docker compose version
             fi
 
-            # ===== 1. 이전 배포 정리 및 디렉토리 준비 =====
-            # 기존 프로젝트 디렉토리 삭제 후 새로 생성
-            rm -rf ~/myauth
+            # ===== 1. 디렉토리 준비 =====
+            # 디렉토리가 없으면 생성 (SCP로 전송된 파일 유지)
             mkdir -p ~/myauth
             cd ~/myauth
 
-            # ===== 2. GitHub 저장소 클론 =====
-            # docker-compose.prod.yml 등 필요한 설정 파일 가져오기
-            git clone https://github.com/icesnake72/myauth.git .
+            # ===== 2. docker-compose.prod.yml 파일 확인 =====
+            # SCP action으로 이미 전송된 파일 확인
+            echo "docker-compose.prod.yml 파일 확인 중..."
+            ls -lh ~/myauth/docker-compose.prod.yml
 
             # ===== 3. .env 파일 자동 생성 =====
             # GitHub Secrets의 환경변수들로 .env 파일을 자동 생성
