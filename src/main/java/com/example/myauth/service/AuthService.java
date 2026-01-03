@@ -152,6 +152,7 @@ public class AuthService {
         .email(user.getEmail())
         .name(user.getName())
         .role(user.getRole().name())
+        .profileImage(user.getProfileImage())
         .build();
 
     log.info("로그인 성공: {}", normalizedEmail);

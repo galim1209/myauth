@@ -232,6 +232,7 @@ public class KakaoOAuthService {
         .email(user.getEmail())
         .name(user.getName())
         .role(user.getRole().name())
+        .profileImage(user.getProfileImage())
         .build();
 
     return LoginResponse.builder()
