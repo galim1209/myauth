@@ -295,6 +295,20 @@ public class GlobalExceptionHandler {
   }
 
   /**
+   * 해시태그 없음 예외 처리
+   */
+  @ExceptionHandler(HashtagNotFoundException.class)
+  @SuppressWarnings("NullableProblems")
+  public ResponseEntity<ApiResponse<Void>> handleHashtagNotFoundException(
+      HashtagNotFoundException ex) {
+    log.warn("해시태그 없음: {}", ex.getMessage());
+
+    return ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body(ApiResponse.error(ex.getMessage()));
+  }
+
+  /**
    * Bean Validation 검증 실패 시 처리
    * Controller에서 @Valid 어노테이션으로 검증 실패한 경우 발생하는 예외를 처리한다
    *

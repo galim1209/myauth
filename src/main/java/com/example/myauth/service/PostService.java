@@ -32,6 +32,8 @@ public class PostService {
   private final PostImageRepository postImageRepository;
   private final UserRepository userRepository;
   private final ImageStorageService imageStorageService;
+  private final HashtagService hashtagService;
+  private final MentionService mentionService;
 
   // ===== 게시글 작성 =====
 
@@ -79,6 +81,12 @@ public class PostService {
     if (images != null && !images.isEmpty()) {
       savePostImages(savedPost, images);
     }
+
+    // 5. 해시태그 처리 (본문에서 해시태그 추출 및 연결)
+    hashtagService.linkHashtagsToPost(savedPost, request.getContent());
+
+    // 6. 멘션 처리 (본문에서 멘션 추출 및 저장)
+    mentionService.processPostMentions(request.getContent(), postId, userId);
 
     log.info("게시글 작성 완료 - postId: {}", postId);
 
@@ -145,6 +153,12 @@ public class PostService {
     // 3. 필드 업데이트 (null이 아닌 경우만)
     if (request.getContent() != null) {
       post.setContent(request.getContent());
+
+      // 3-1. 해시태그 업데이트
+      hashtagService.updatePostHashtags(post, request.getContent());
+
+      // 3-2. 멘션 업데이트
+      mentionService.updatePostMentions(request.getContent(), postId, userId);
     }
     if (request.getVisibility() != null) {
       post.setVisibility(request.getVisibility());

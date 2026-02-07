@@ -33,4 +33,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
    * @return 사용자 정보 (Optional)
    */
   Optional<User> findByProviderAndProviderId(String provider, String providerId);
+
+  /**
+   * 이름으로 사용자를 조회한다 (멘션 기능용)
+   * @param name 사용자 이름
+   * @return 사용자 정보 (Optional)
+   */
+  Optional<User> findByName(String name);
 }

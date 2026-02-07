@@ -137,4 +137,77 @@ public interface PostRepository extends JpaRepository<Post, Long> {
    * @return 소유 여부
    */
   boolean existsByIdAndUserIdAndIsDeletedFalse(Long id, Long userId);
+
+  // ===== 피드 조회 =====
+
+  /**
+   * 홈 피드: 팔로잉 사용자의 게시글 조회
+   * @param userId 로그인 사용자 ID
+   * @param pageable 페이지 정보
+   * @return 피드 게시글 페이지
+   */
+  @Query("SELECT p FROM Post p " +
+      "WHERE p.user.id IN (SELECT f.following.id FROM Follow f WHERE f.follower.id = :userId) " +
+      "AND p.isDeleted = false " +
+      "AND (p.visibility = 'PUBLIC' OR p.visibility = 'FOLLOWERS') " +
+      "ORDER BY p.createdAt DESC")
+  Page<Post> findHomeFeed(@Param("userId") Long userId, Pageable pageable);
+
+  /**
+   * 홈 피드: 팔로잉 사용자 + 본인 게시글 조회
+   * @param userId 로그인 사용자 ID
+   * @param pageable 페이지 정보
+   * @return 피드 게시글 페이지
+   */
+  @Query("SELECT p FROM Post p " +
+      "WHERE (p.user.id IN (SELECT f.following.id FROM Follow f WHERE f.follower.id = :userId) " +
+      "       OR p.user.id = :userId) " +
+      "AND p.isDeleted = false " +
+      "AND (p.visibility = 'PUBLIC' OR p.visibility = 'FOLLOWERS' OR p.user.id = :userId) " +
+      "ORDER BY p.createdAt DESC")
+  Page<Post> findHomeFeedWithMyPosts(@Param("userId") Long userId, Pageable pageable);
+
+  /**
+   * 탐색 피드: 공개 게시글 최신순
+   * @param pageable 페이지 정보
+   * @return 공개 게시글 페이지
+   */
+  @Query("SELECT p FROM Post p " +
+      "WHERE p.isDeleted = false AND p.visibility = 'PUBLIC' " +
+      "ORDER BY p.createdAt DESC")
+  Page<Post> findPublicPostsOrderByCreatedAt(Pageable pageable);
+
+  /**
+   * 탐색 피드: 공개 게시글 인기순 (좋아요 순)
+   * @param pageable 페이지 정보
+   * @return 공개 게시글 페이지
+   */
+  @Query("SELECT p FROM Post p " +
+      "WHERE p.isDeleted = false AND p.visibility = 'PUBLIC' " +
+      "ORDER BY p.likeCount DESC, p.createdAt DESC")
+  Page<Post> findPublicPostsOrderByLikeCount(Pageable pageable);
+
+  /**
+   * 탐색 피드: 공개 게시글 조회수순
+   * @param pageable 페이지 정보
+   * @return 공개 게시글 페이지
+   */
+  @Query("SELECT p FROM Post p " +
+      "WHERE p.isDeleted = false AND p.visibility = 'PUBLIC' " +
+      "ORDER BY p.viewCount DESC, p.createdAt DESC")
+  Page<Post> findPublicPostsOrderByViewCount(Pageable pageable);
+
+  /**
+   * 추천 피드: 팔로우하지 않는 사용자의 인기 게시글
+   * @param userId 로그인 사용자 ID
+   * @param pageable 페이지 정보
+   * @return 추천 게시글 페이지
+   */
+  @Query("SELECT p FROM Post p " +
+      "WHERE p.user.id NOT IN (SELECT f.following.id FROM Follow f WHERE f.follower.id = :userId) " +
+      "AND p.user.id <> :userId " +
+      "AND p.isDeleted = false " +
+      "AND p.visibility = 'PUBLIC' " +
+      "ORDER BY p.likeCount DESC, p.createdAt DESC")
+  Page<Post> findRecommendedPosts(@Param("userId") Long userId, Pageable pageable);
 }

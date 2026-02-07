@@ -78,16 +78,14 @@ public class PostHashtag {
 
   /**
    * 게시글-해시태그 연결 생성
+   * 주의: 양방향 관계 설정은 명시적 저장 후 별도로 처리
+   * (영속성 컨텍스트 충돌 방지)
    */
   public static PostHashtag create(Post post, Hashtag hashtag) {
     PostHashtag postHashtag = PostHashtag.builder()
         .post(post)
         .hashtag(hashtag)
         .build();
-
-    // 양방향 관계 설정
-    post.getPostHashtags().add(postHashtag);
-    hashtag.getPostHashtags().add(postHashtag);
 
     // 해시태그 사용 카운트 증가
     hashtag.incrementPostCount();
