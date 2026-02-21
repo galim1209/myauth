@@ -32,7 +32,7 @@ public class AuthController {
 
   @GetMapping("/health")
   public ResponseEntity<ApiResponse<Void>> health() {
-    return ResponseEntity.ok(ApiResponse.success("Auth Service is running..."));
+    return ResponseEntity.ok(ApiResponse.success("Auth Service is running"));
   }
 
 
