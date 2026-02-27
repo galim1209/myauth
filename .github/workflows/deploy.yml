@@ -386,6 +386,8 @@ jobs:
 # 8. KAKAO_CLIENT_ID: 카카오 REST API 키
 # 9. KAKAO_CLIENT_SECRET: 카카오 Client Secret
 # 10. KAKAO_REDIRECT_URI: 카카오 콜백 URL
+#     ⚠️ 반드시 /api 접두사 포함! (예: http://server-ip/api/auth/kakao/callback)
+#     ⚠️ nginx(80포트) 경유 권장 (8080 직접 접근 X)
 #
 # 프론트엔드 관련:
 # 11. FRONTEND_URL: 프론트엔드 URL (CORS 설정용)

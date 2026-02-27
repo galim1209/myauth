@@ -201,7 +201,8 @@ services:
       KAKAO_CLIENT_SECRET: ${KAKAO_CLIENT_SECRET}
 
       # 카카오 로그인 성공 후 리다이렉트될 백엔드 URL
-      # - 예: http://server-ip-address:8080/auth/kakao/callback
+      # - ⚠️ 반드시 /api 접두사를 포함해야 함 (컨트롤러 매핑: /api/auth/kakao/callback)
+      # - 예: http://server-ip-address/api/auth/kakao/callback (nginx 80포트 경유 권장)
       KAKAO_REDIRECT_URI: ${KAKAO_REDIRECT_URI}
 
       # ===== 프론트엔드 URL 설정 =====
